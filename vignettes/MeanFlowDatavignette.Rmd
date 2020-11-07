@@ -1,5 +1,5 @@
 ---
-title: "MeanFlowDatavignette"
+title: "Mean Cell Type Findings from Flow Cytometry"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{MeanFlowDatavignette}
@@ -18,10 +18,11 @@ knitr::opts_chunk$set(
 library(MeanFlowData)
 ```
 
-#**Mean Cell Type Findings from Flow Cytometry Data**
+
+**Mean Cell Type Findings from Flow Cytometry Data**
 
 *Function 1* 
-##Split Data by Genotype 
+Split Data by Genotype 
 ```{r}
 
 Split_Gen_Funct<- function(df, vect){
@@ -30,34 +31,36 @@ return(Split_Genotype.df)
 }
 
 ```
-###use function in main script 
+Use function in main script 
 ```{r}
 
-Split_Genotype_list<- Split_Gen_Funct(SC_Data, SC_Data$Genotype )
+Split_Genotype_list<- Split_Gen_Funct(SC_Data, SC_Data$Genotype)
 
-#convert the separated list into dataframes 
+#mainScript to convert the separated list into dataframes 
 Het_df<- as.data.frame(Split_Genotype_list[[1]])
 KO_df<- as.data.frame(Split_Genotype_list[[2]])
 WT_df<- as.data.frame(Split_Genotype_list[[3]])
 
 #remove first two columns so we can take the mean of each column:
-Het_df<- Het_df[3:14]
-KO_df<- KO_df[3:14]
-WT_df<- WT_df[3:14]
+Het_df<- Het_df[,3:14]
+KO_df<- KO_df[,3:14]
+WT_df<- WT_df[,3:14]
+
 ```
 
 *Function 2*
-##Take the mean of each cell type per genotype (mean of each column)
-```{r}
-ColMean_funct<- function(df){
-  Col_Means_df<- colMeans(df)
-  return(Col_Means_df)
-}
+Take the mean of each cell type per genotype (mean of each column)
+#```{r}
+#ColMean_funct<- function(df){
+#  Col_Means_df<- colMeans(df)
+#  return(Col_Means_df)
+#}
 
-```
+#```
 
-###call the function and create a matrix for each mean set
+Call the function and create a matrix for each mean set
 ```{r}
+#call the function and create a matrix for each mean set
 Het_means<- ColMean_funct(Het_df)
 KO_means<- ColMean_funct(KO_df)
 WT_means<- ColMean_funct(WT_df)
@@ -67,7 +70,7 @@ TotalMeans<- cbind(Het_means, KO_means, WT_means)
 ```
 
 *Function 3*
-##Visualize Data in a barplot to compare cell types
+Visualize Data in a barplot to compare cell types
 ```{r}
 barplot_funct<- function(matrix){
   bar.plot<- barplot(matrix, width= 0.01, beside=TRUE, main='Mean Flow Cytometry Cell Count', xlab='Cell Types (WT, Het, KO)', ylab="Cell Count (%)", col=topo.colors(12))
@@ -76,8 +79,8 @@ barplot_funct<- function(matrix){
   }
 ```
 
-###Call function to create graph
+Call function to create graph
 ```{r}
 barplot_funct(TotalMeans)
 ```
-#Compare mean cell types C1-C12 from Flow Cytometry analysis 
+Figure 1: Compare mean cell types C1-C12 from Flow Cytometry analysis 
